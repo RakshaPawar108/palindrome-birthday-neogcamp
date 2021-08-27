@@ -6,6 +6,7 @@ function reverseStr(str) {
   return reversedStr;
 }
 
+// Check if string is palindrome or not
 function isPalindrome(ipString) {
   var reverse = reverseStr(ipString);
 
@@ -38,6 +39,7 @@ function convertDateToString(date) {
   return dateStr;
 }
 
+// Get date in all formats to not miss out on a palindrome date
 function getAllDateFormats(date) {
   var dateStr = convertDateToString(date);
 
@@ -51,6 +53,7 @@ function getAllDateFormats(date) {
   return [ddmmyyyy, mmddyyyy, yyyymmdd, ddmmyy, mmddyy, yymmdd];
 }
 
+// Check palindrome for all the possible date formats
 function checkPalindromeForAllDateFormats(date) {
   listOfDateFormats = getAllDateFormats(date);
 
@@ -65,10 +68,81 @@ function checkPalindromeForAllDateFormats(date) {
   return flag;
 }
 
+// Get Next Palindrome date
+
+// Check for leap year
+function isLeapYear(year) {
+  if (year % 400 === 0) {
+    return true;
+  }
+  if (year % 100 === 0) {
+    return false;
+  }
+  if (year % 4 === 0) {
+    return true;
+  }
+  return false;
+}
+
+// Gets next  date
+function getNextDate(date) {
+  var day = date.day + 1;
+  var month = date.month;
+  var year = date.year;
+
+  var daysInMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+
+  if (month === 2) {
+    //Check for february
+    if (isLeapYear(year)) {
+      if (day > 29) {
+        day = 1;
+        month++;
+      } else {
+        if (day > 28) {
+          day = 1;
+          month++;
+        }
+      }
+    }
+  } else {
+    //   Check if day exceeds max days in a month
+    if (day > daysInMonth[month - 1]) {
+      day = 1;
+      month++;
+    }
+  }
+
+  //   Check for year change
+  if (month > 12) {
+    month = 1;
+    year++;
+  }
+
+  return { day: day, month: month, year: year };
+}
+
+// Get a next palindrome date
+function getNextPalindromeDate(date) {
+  var counter = 0;
+  var nextDate = getNextDate(date);
+
+  while (1) {
+    counter++;
+    var isPal = checkPalindromeForAllDateFormats(nextDate);
+    if (isPal) {
+      break;
+    }
+    nextDate = getNextDate(nextDate);
+  }
+
+  return [counter, nextDate];
+}
+
 var date = {
-  day: 20,
+  day: 31,
   month: 12,
-  year: 2002,
+  year: 2020,
 };
 
-console.log(checkPalindromeForAllDateFormats(date));
+console.log(getNextPalindromeDate(date));
