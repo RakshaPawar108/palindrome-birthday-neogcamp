@@ -86,11 +86,11 @@ function isLeapYear(year) {
 
 // Gets next  date
 function getNextDate(date) {
-  var day = date.day + 1;
-  var month = date.month;
-  var year = date.year;
+  let day = date.day + 1;
+  let month = date.month;
+  let year = date.year;
 
-  var daysInMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+  let daysInMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
 
   if (month === 2) {
     //Check for february
@@ -124,12 +124,12 @@ function getNextDate(date) {
 
 // Get a next palindrome date
 function getNextPalindromeDate(date) {
-  var counter = 0;
-  var nextDate = getNextDate(date);
+  let counter = 0;
+  let nextDate = getNextDate(date);
 
   while (1) {
     counter++;
-    var isPal = checkPalindromeForAllDateFormats(nextDate);
+    let isPal = checkPalindromeForAllDateFormats(nextDate);
     if (isPal) {
       break;
     }
@@ -139,10 +139,57 @@ function getNextPalindromeDate(date) {
   return [counter, nextDate];
 }
 
+// Get previous date.
+function getPrevDate(date) {
+  let day = date.day - 1;
+  let month = date.month;
+  let year = date.year;
+
+  let daysInMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+
+  if (day === 0) {
+    month--;
+
+    if (month === 0) {
+      month = 12;
+      day = 31;
+      year--;
+    } else if (month === 2) {
+      if (isLeapYear(year)) {
+        day = 29;
+      } else {
+        day = 28;
+      }
+    } else {
+      day = daysInMonth[month - 1];
+    }
+  }
+
+  return { day: day, month: month, year: year };
+}
+
+// Get previous palindrome date
+
+function getPreviousPalindromeDate(date) {
+  let counter = 0;
+  let prevDate = getPrevDate(date);
+
+  while (1) {
+    counter++;
+    let isPal = checkPalindromeForAllDateFormats(prevDate);
+    if (isPal) {
+      break;
+    }
+    prevDate = getPrevDate(prevDate);
+  }
+
+  return [counter, prevDate];
+}
+
 var date = {
-  day: 31,
-  month: 12,
-  year: 2020,
+  day: 1,
+  month: 1,
+  year: 2021,
 };
 
-console.log(getNextPalindromeDate(date));
+console.log(getPreviousPalindromeDate(date));
